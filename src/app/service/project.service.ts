@@ -7,13 +7,15 @@ import {Guid} from '../models/guid';
   providedIn: 'root'
 })
 export class ProjectService {
-  // tslint:disable-next-line:variable-name
-  private _projects$: ReplaySubject<Project[]> = new ReplaySubject<Project[]>();
-  public projects$: Observable<Project[]> = this._projects$.asObservable();
+  /**
+   * Observable collection of Projects
+   */
+  public projects$: Observable<Project[]>;
 
-  private projects: Map<string, Project> = new Map<string, Project>();
-
-  constructor() { }
+  constructor() {
+    this.initializeProjects();
+    this.projects$ = this._projects$.asObservable();
+  }
 
   /**
    *
@@ -63,4 +65,22 @@ export class ProjectService {
     this._projects$.next(Array.from(this.projects.values()));
   }
 
+  // tslint:disable:member-ordering
+  // tslint:disable-next-line:variable-name
+  private _projects$: ReplaySubject<Project[]> = new ReplaySubject<Project[]>();
+  private projects: Map<string, Project> = new Map<string, Project>();
+  // tslint:enable:member-ordering
+
+  private initializeProjects() {
+    const projects = [
+      new Project({id: null, title: 'The Matrix', rating: 5}),
+      new Project({id: null, title: 'Point Break', rating: 5}),
+      new Project({id: null, title: 'Bill & Ted\'s Excellent Adventure', rating: 5}),
+      new Project({id: null, title: 'Bill & Ted\'s Bogus Journey', rating: 4}),
+      new Project({id: null, title: 'Speed', rating: 5}),
+      new Project({id: null, title: 'The Matrix Reloaded', rating: 2}),
+      new Project({id: null, title: 'The Matrix Revolutions', rating: 3}),
+    ];
+    projects.forEach(project => this.createProject(project));
+  }
 }
